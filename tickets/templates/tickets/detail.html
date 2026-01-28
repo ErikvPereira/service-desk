@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Chamado #{{ ticket.id }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h5 m-0">Chamado #{{ ticket.id }} — {{ ticket.title }}</h1>
+  <a class="btn btn-outline-secondary btn-sm" href="{% url 'ticket_list' %}">Voltar</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="row g-2 mb-3">
+      <div class="col-md-3"><span class="text-muted">Status:</span> {{ ticket.status }}</div>
+      <div class="col-md-3"><span class="text-muted">Prioridade:</span> {{ ticket.priority }}</div>
+      <div class="col-md-3"><span class="text-muted">Categoria:</span> {{ ticket.category }}</div>
+      <div class="col-md-3"><span class="text-muted">Criado:</span> {{ ticket.created_at|date:"d/m/Y H:i" }}</div>
+    </div>
+    <p class="mb-0">{{ ticket.description }}</p>
+  </div>
+</div>
+{% endblock %}

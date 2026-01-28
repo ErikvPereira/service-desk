@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -41,3 +41,8 @@ def ticket_new(request):
     else:
         form = TicketForm()
     return render(request, 'tickets/new.html', {'form': form})
+
+@login_required
+def ticket_detail(request, ticket_id: int):
+    ticket = get_object_or_404(Ticket, id=ticket_id, requester=request.user)
+    return render(request, 'tickets/detail.html', {'ticket': ticket})

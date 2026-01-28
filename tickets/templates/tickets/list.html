@@ -13,7 +13,9 @@
         {% for t in tickets %}
           <li class="list-group-item d-flex justify-content-between">
             <div>
-              <strong>#{{ t.id }}</strong> {{ t.title }}
+              <a href="{% url 'ticket_detail' t.id %}">
+                <strong>#{{ t.id }}</strong> {{ t.title }}
+              </a>
               <div class="small text-muted">{{ t.created_at|date:"d/m/Y H:i" }}</div>
             </div>
             <span class="badge text-bg-secondary">{{ t.status }}</span>
