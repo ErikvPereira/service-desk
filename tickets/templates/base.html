@@ -10,14 +10,14 @@
   <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <a class="navbar-brand" href="/tickets/">Service Desk</a>
+        <a class="navbar-brand" href="{% url 'ticket_list' %}">Service Desk</a>
 
         <div class="ms-auto d-flex gap-2">
           {% if user.is_authenticated %}
             <span class="navbar-text text-white-50">Olá, {{ user.username }}</span>
-            <a class="btn btn-outline-light btn-sm" href="/logout/">Sair</a>
+            <a class="btn btn-outline-light btn-sm" href="{% url 'logout' %}">Sair</a>
           {% else %}
-            <a class="btn btn-outline-light btn-sm" href="/login/">Entrar</a>
+            <a class="btn btn-outline-light btn-sm" href="{% url 'login' %}">Entrar</a>
           {% endif %}
         </div>
       </div>
