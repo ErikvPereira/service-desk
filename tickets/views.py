@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from .forms import TicketForm
+from .models import Ticket
 
 # Create your views here.
 def tickets_home(request):
@@ -13,10 +16,28 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            return redirect('tickets_home')
+            return redirect("ticket_list")
         messages.error(request, 'Usuário ou senha inválidos.')
     return render(request, 'auth/login.html')
 
 def logout_view(request):
     logout(request)
     return redirect('login')
+
+@login_required
+def ticket_list(request):
+    tickets = Ticket.objects.filter(requester=request.user).order_by('-created_at')
+    return render(request, 'tickets/list.html', {'tickets': tickets})
+
+@login_required
+def ticket_new(request):
+    if request.method == 'POST':
+        form = TicketForm(request.POST)
+        if form.is_valid():
+            ticket = form.save(commit=False)
+            ticket.requester = request.user
+            ticket.save()
+            return redirect('ticket_list')
+    else:
+        form = TicketForm()
+    return render(request, 'tickets/new.html', {'form': form})

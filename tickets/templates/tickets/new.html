@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Novo chamado{% endblock %}
+{% block content %}
+<h1 class="h5 mb-3">Novo chamado</h1>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label class="form-label">Título</label>
+        <input name="title" class="form-control" required />
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Descrição</label>
+        <textarea name="description" class="form-control" rows="4" required></textarea>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Categoria</label>
+          <select name="category" class="form-select">
+            <option value="BUG">Bug</option>
+            <option value="ACCESS">Acesso</option>
+            <option value="QUESTION">Dúvida</option>
+            <option value="OTHER">Outro</option>
+          </select>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Prioridade</label>
+          <select name="priority" class="form-select">
+            <option value="LOW">Baixa</option>
+            <option value="MEDIUM" selected>Média</option>
+            <option value="HIGH">Alta</option>
+            <option value="URGENT">Urgente</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary">Criar</button>
+      <a class="btn btn-outline-secondary" href="/tickets/">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
