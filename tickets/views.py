@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .forms import TicketForm
+from .forms import TicketForm, CommentForm
 from .models import Ticket
 
 # Create your views here.
@@ -45,4 +45,21 @@ def ticket_new(request):
 @login_required
 def ticket_detail(request, ticket_id: int):
     ticket = get_object_or_404(Ticket, id=ticket_id, requester=request.user)
-    return render(request, 'tickets/detail.html', {'ticket': ticket})
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.ticket = ticket
+            comment.author = request.user
+            comment.save()
+            return redirect("ticket_detail", ticket_id=ticket.id)
+    else:
+        form = CommentForm()
+
+    comments = ticket.comments.select_related("author").order_by("created_at")
+    return render(
+        request,
+        "tickets/detail.html",
+        {"ticket": ticket, "comments": comments, "form": form},
+    )
