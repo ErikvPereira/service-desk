@@ -18,4 +18,34 @@
     <p class="mb-0">{{ ticket.description }}</p>
   </div>
 </div>
+<div class="card shadow-sm mt-3">
+  <div class="card-body">
+    <h2 class="h6">Comentários</h2>
+
+    {% if comments %}
+      <div class="list-group mb-3">
+        {% for c in comments %}
+          <div class="list-group-item">
+            <div class="small text-muted">
+              {{ c.author.username }} • {{ c.created_at|date:"d/m/Y H:i" }}
+            </div>
+            <div>{{ c.message }}</div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">Nenhum comentário ainda.</p>
+    {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-2">
+        <label class="form-label">Adicionar comentário</label>
+        <textarea name="message" class="form-control" rows="2" required></textarea>
+      </div>
+      <button class="btn btn-dark btn-sm">Enviar</button>
+    </form>
+  </div>
+</div>
+
 {% endblock %}
