@@ -18,6 +18,11 @@ python manage.py migrate
 
 python manage.py runserver
 
+## E2E (Playwright)
+```bash
+pytest -q e2e
+# ver o navegador
+pytest -q e2e --headed
 
 
 
