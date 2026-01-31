@@ -1,5 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
+
 from tickets.models import Ticket, TicketComment
 
 pytestmark = pytest.mark.django_db
