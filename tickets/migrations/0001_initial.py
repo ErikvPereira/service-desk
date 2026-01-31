@@ -15,16 +15,64 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Ticket',
+            name="Ticket",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=120)),
-                ('description', models.TextField()),
-                ('category', models.CharField(choices=[('BUG', 'Bug'), ('ACCESS', 'Acesso'), ('QUESTION', 'Dúvida'), ('OTHER', 'Outro')], default='OTHER', max_length=20)),
-                ('priority', models.CharField(choices=[('LOW', 'Baixa'), ('MEDIUM', 'Média'), ('HIGH', 'Alta'), ('URGENT', 'Urgente')], default='MEDIUM', max_length=20)),
-                ('status', models.CharField(choices=[('OPEN', 'Aberto'), ('IN_PROGRESS', 'Em andamento'), ('RESOLVED', 'Resolvido'), ('CLOSED', 'Fechado')], default='OPEN', max_length=20)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('requester', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("title", models.CharField(max_length=120)),
+                ("description", models.TextField()),
+                (
+                    "category",
+                    models.CharField(
+                        choices=[
+                            ("BUG", "Bug"),
+                            ("ACCESS", "Acesso"),
+                            ("QUESTION", "Dúvida"),
+                            ("OTHER", "Outro"),
+                        ],
+                        default="OTHER",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "priority",
+                    models.CharField(
+                        choices=[
+                            ("LOW", "Baixa"),
+                            ("MEDIUM", "Média"),
+                            ("HIGH", "Alta"),
+                            ("URGENT", "Urgente"),
+                        ],
+                        default="MEDIUM",
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("OPEN", "Aberto"),
+                            ("IN_PROGRESS", "Em andamento"),
+                            ("RESOLVED", "Resolvido"),
+                            ("CLOSED", "Fechado"),
+                        ],
+                        default="OPEN",
+                        max_length=20,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "requester",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="tickets",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
