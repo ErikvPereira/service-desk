@@ -21,25 +21,30 @@ Projeto focado em **boas práticas de mercado**: testes (pytest), E2E (Playwrigh
 - Ruff + Black
 
 ## Rodar local (Windows)
-powershell
+```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py runserver
+```
 
 ## URLs locais: 
 /tickets/
 /login/
 
 ## Criar usuário:
+```
 python manage.py createsuperuser
-
+```
 ## Testes:
+```
 pytest -q
 pytest -q e2e
-
+```
 
 ## Qualidade:
+```
 ruff check . --fix
 black .
+```
