@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.db.models import Q
 
 from .forms import CommentForm, TicketForm
 from .models import Ticket
@@ -31,8 +32,35 @@ def logout_view(request):
 
 @login_required
 def ticket_list(request):
-    tickets = Ticket.objects.filter(requester=request.user).order_by("-created_at")
-    return render(request, "tickets/list.html", {"tickets": tickets})
+    qs = Ticket.objects.filter(requester=request.user).order_by("-created_at")
+
+    q = request.GET.get("q", "").strip()
+    status = request.GET.get("status", "").strip()
+
+    category = request.GET.get("category", "").strip()
+
+    if category:
+        qs = qs.filter(category=category)
+
+    if q:
+        qs = qs.filter(Q(title__icontains=q) | Q(description__icontains=q))
+
+    if status:
+        qs = qs.filter(status=status)
+
+    return render(
+        request,
+        "tickets/list.html",
+        {
+            "tickets": qs,
+            "q": q,
+            "status": status,
+            "category": category,
+            "category_choices": Ticket._meta.get_field("category").choices,
+        },
+    )
+
+
 
 
 @login_required

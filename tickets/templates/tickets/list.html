@@ -1,10 +1,51 @@
 {% extends "base.html" %}
 {% block title %}Meus Chamados{% endblock %}
 {% block content %}
+<form method="get" class="row g-2 align-items-end mb-3">
+  <div class="col-md-5">
+    <label class="form-label">Buscar</label>
+    <input
+      type="text"
+      name="q"
+      value="{{ q|default:'' }}"
+      class="form-control"
+      placeholder="Título ou descrição..."
+    />
+  </div>
+
+  <div class="col-md-2">
+    <label class="form-label">Status</label>
+    <select name="status" class="form-select">
+      <option value="">Todos</option>
+      <option value="OPEN" {% if status == "OPEN" %}selected{% endif %}>OPEN</option>
+      <option value="CLOSED" {% if status == "CLOSED" %}selected{% endif %}>CLOSED</option>
+    </select>
+  </div>
+
+  <div class="col-md-3">
+  <label class="form-label">Categoria</label>
+  <select name="category" class="form-select">
+    <option value="">Todas</option>
+  {% for value, label in category_choices %}
+    <option value="{{ value }}" {% if category == value %}selected{% endif %}>
+      {{ label }}
+    </option>
+  {% endfor %}
+  </select>
+</div>
+
+  <div class="col-md-2 d-flex gap-2">
+    <button class="btn btn-dark w-100" type="submit">Filtrar</button>
+    <a class="btn btn-outline-secondary w-100" href="{% url 'ticket_list' %}">Limpar</a>
+  </div>
+</form>
+
 <div class="d-flex justify-content-between align-items-center mb-3">
   <h1 class="h5 m-0">Meus Chamados</h1>
   <a class="btn btn-primary btn-sm" href="/tickets/new/">Novo chamado</a>
 </div>
+
+
 
 <div class="card shadow-sm">
   <div class="card-body">

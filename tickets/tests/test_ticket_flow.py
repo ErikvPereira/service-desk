@@ -57,3 +57,30 @@ def test_logged_user_can_comment_on_own_ticket(client):
     assert comment.ticket_id == ticket.id
     assert comment.author == user
     assert comment.message == "Primeiro comentário"
+
+def test_ticket_list_filters_by_query_and_status(client):
+    user = create_user()
+    client.login(username="erik", password="12345678")
+
+    Ticket.objects.create(
+        title="Erro no login",
+        description="Falha ao entrar",
+        category="BUG",
+        priority="MEDIUM",
+        status="OPEN",
+        requester=user,
+    )
+    Ticket.objects.create(
+        title="Outra coisa",
+        description="Nada a ver",
+        category="BUG",
+        priority="MEDIUM",
+        status="CLOSED",
+        requester=user,
+    )
+
+    resp = client.get("/tickets/?q=login&status=OPEN")
+    assert resp.status_code == 200
+    content = resp.content.decode()
+    assert "Erro no login" in content
+    assert "Outra coisa" not in content
