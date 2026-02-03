@@ -1,4 +1,5 @@
 ## Service Desk (Django)
+[![CI](https://github.com/ErikvPereira/service-desk/actions/workflows/tests.yml/badge.svg)](https://github.com/ErikvPereira/service-desk/actions/workflows/tests.yml)
 
 Sistema simples de **controle de chamados (helpdesk/service desk)** feito em Django, com autenticação, tickets e comentários.  
 Projeto focado em **boas práticas de mercado**: testes (pytest), E2E (Playwright), CI (GitHub Actions) e qualidade (ruff/black).
