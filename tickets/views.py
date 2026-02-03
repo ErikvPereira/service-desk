@@ -39,6 +39,12 @@ def ticket_list(request):
 
     category = request.GET.get("category", "").strip()
 
+    priority = request.GET.get("priority", "").strip()
+
+    if priority:
+        qs = qs.filter(priority=priority)
+
+
     if category:
         qs = qs.filter(category=category)
 
@@ -56,7 +62,9 @@ def ticket_list(request):
             "q": q,
             "status": status,
             "category": category,
+            'priority': priority,
             "category_choices": Ticket._meta.get_field("category").choices,
+            "priority_choices": Ticket._meta.get_field("priority").choices,
         },
     )
 
