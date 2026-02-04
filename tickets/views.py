@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
+from django.views.decorators.http import require_POST
 
 from .forms import CommentForm, TicketForm
 from .models import Ticket
@@ -68,9 +69,6 @@ def ticket_list(request):
         },
     )
 
-
-
-
 @login_required
 def ticket_new(request):
     if request.method == "POST":
@@ -106,3 +104,18 @@ def ticket_detail(request, ticket_id: int):
         "tickets/detail.html",
         {"ticket": ticket, "comments": comments, "form": form},
     )
+
+@login_required
+@require_POST
+def toggle_ticket_status(request, ticket_id: int):
+    ticket = get_object_or_404(Ticket, id=ticket_id, requester=request.user)
+
+    if ticket.status == Ticket.Status.CLOSED:
+        ticket.status = Ticket.Status.IN_PROGRESS
+        messages.success(request, "Ticket reaberto (Em andamento).")
+    else:
+        ticket.status = Ticket.Status.CLOSED
+        messages.success(request, "Ticket fechado.")
+
+    ticket.save(update_fields=["status"])
+    return redirect("ticket_detail", ticket_id=ticket.id)

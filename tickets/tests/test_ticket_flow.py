@@ -84,3 +84,25 @@ def test_ticket_list_filters_by_query_and_status(client):
     content = resp.content.decode()
     assert "Erro no login" in content
     assert "Outra coisa" not in content
+
+def test_user_can_close_and_reopen_own_ticket(client):
+    user = create_user()
+    client.login(username="erik", password="12345678")
+
+    ticket = Ticket.objects.create(
+    title="Fechar ticket",
+    description="Teste",
+    category=Ticket.Category.BUG,
+    priority=Ticket.Priority.MEDIUM,
+    status=Ticket.Status.OPEN,
+    requester=user,
+)
+
+    # close
+    client.post(f"/tickets/{ticket.id}/toggle-status/", follow=True)
+    ticket.refresh_from_db()
+    assert ticket.status == Ticket.Status.CLOSED
+
+    client.post(f"/tickets/{ticket.id}/toggle-status/", follow=True)
+    ticket.refresh_from_db()
+    assert ticket.status == Ticket.Status.IN_PROGRESS
