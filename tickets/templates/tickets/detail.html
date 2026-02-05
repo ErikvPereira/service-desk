@@ -22,7 +22,15 @@
 <div class="card shadow-sm">
   <div class="card-body">
     <div class="row g-2 mb-3">
-      <div class="col-md-3"><span class="text-muted">Status:</span> {{ ticket.get_status_display }}</div>
+      <div class="col-md-3"><span class="text-muted">Status:</span> {% if ticket.status == "OPEN" %}
+  <span class="badge text-bg-success">{{ ticket.get_status_display }}</span>
+      {% elif ticket.status == "IN_PROGRESS" %}
+        <span class="badge text-bg-primary">{{ ticket.get_status_display }}</span>
+      {% elif ticket.status == "RESOLVED" %}
+        <span class="badge text-bg-warning">{{ ticket.get_status_display }}</span>
+      {% else %}
+        <span class="badge text-bg-secondary">{{ ticket.get_status_display }}</span>
+      {% endif %}</div>
       <div class="col-md-3"><span class="text-muted">Prioridade:</span> {{ ticket.get_priority_display }}</div>
       <div class="col-md-3"><span class="text-muted">Categoria:</span> {{ ticket.get_category_display }}</div>
       <div class="col-md-3"><span class="text-muted">Criado:</span> {{ ticket.created_at|date:"d/m/Y H:i" }}</div>
@@ -50,14 +58,19 @@
       <p class="text-muted">Nenhum comentário ainda.</p>
     {% endif %}
 
-    <form method="post">
-      {% csrf_token %}
-      <div class="mb-2">
-        <label class="form-label">Adicionar comentário</label>
-        <textarea name="message" class="form-control" rows="2" required></textarea>
-      </div>
-      <button class="btn btn-dark btn-sm">Enviar</button>
-    </form>
+    {% if ticket.status == "CLOSED" %}
+      <p class="text-muted mb-0">Ticket fechado. Reabra para comentar.</p>
+    {% else %}
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-2">
+          <label class="form-label">Adicionar comentário</label>
+          <textarea name="message" class="form-control" rows="2" required></textarea>
+        </div>
+        <button class="btn btn-dark btn-sm" type="submit">Enviar</button>
+      </form>
+    {% endif %}
   </div>
 </div>
+
 {% endblock %}

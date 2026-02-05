@@ -88,6 +88,10 @@ def ticket_detail(request, ticket_id: int):
     ticket = get_object_or_404(Ticket, id=ticket_id, requester=request.user)
 
     if request.method == "POST":
+        if ticket.status == Ticket.Status.CLOSED:
+            messages.error(request, "Ticket fechado não pode receber comentários.")
+            return redirect("ticket_detail", ticket_id=ticket.id)
+
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)

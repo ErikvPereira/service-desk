@@ -65,14 +65,40 @@
     {% if tickets %}
       <ul class="list-group">
         {% for t in tickets %}
-          <li class="list-group-item d-flex justify-content-between">
-            <div>
-              <a href="{% url 'ticket_detail' t.id %}">
-                <strong>#{{ t.id }}</strong> {{ t.title }}
-              </a>
-              <div class="small text-muted">{{ t.created_at|date:"d/m/Y H:i" }}</div>
-            </div>
-            <span class="badge text-bg-secondary">{{ t.get_status_display }}</span>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <a href="{% url 'ticket_detail' t.id %}">
+                  <strong>#{{ t.id }}</strong> {{ t.title }}
+                </a>
+                <div class="small text-muted">{{ t.created_at|date:"d/m/Y H:i" }}</div>
+              </div>
+
+              <div class="d-flex align-items-center gap-2">
+                {# STATUS #}
+                {% if t.status == "OPEN" %}
+                  <span class="badge text-bg-success">{{ t.get_status_display }}</span>
+                {% elif t.status == "IN_PROGRESS" %}
+                  <span class="badge text-bg-primary">{{ t.get_status_display }}</span>
+                {% elif t.status == "RESOLVED" %}
+                  <span class="badge text-bg-warning">{{ t.get_status_display }}</span>
+                {% else %}
+                  <span class="badge text-bg-secondary">{{ t.get_status_display }}</span>
+                {% endif %}
+
+                {# PRIORIDADE #}
+                {% if t.priority == "URGENT" %}
+                  <span class="badge text-bg-danger">{{ t.get_priority_display }}</span>
+                {% elif t.priority == "HIGH" %}
+                  <span class="badge text-bg-warning">{{ t.get_priority_display }}</span>
+                {% elif t.priority == "MEDIUM" %}
+                  <span class="badge text-bg-info">{{ t.get_priority_display }}</span>
+                {% else %}
+                  <span class="badge text-bg-light text-dark border">{{ t.get_priority_display }}</span>
+                {% endif %}
+
+                {# CATEGORIA #}
+                <span class="badge text-bg-light text-dark border">{{ t.get_category_display }}</span>
+              </div>
           </li>
         {% endfor %}
       </ul>

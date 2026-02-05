@@ -106,3 +106,33 @@ def test_user_can_close_and_reopen_own_ticket(client):
     client.post(f"/tickets/{ticket.id}/toggle-status/", follow=True)
     ticket.refresh_from_db()
     assert ticket.status == Ticket.Status.IN_PROGRESS
+
+
+def test_logged_user_cant_comment_in_closed_ticket(client):
+    user = create_user()
+    client.login(username="erik", password="12345678")
+
+    client.post(
+        "/tickets/new/",
+        data={
+            "title": "Meu primeiro ticket",
+            "description": "Descrição do ticket",
+            "category": "BUG",
+            "priority": "MEDIUM",
+        },
+        follow=True,
+    )
+
+    ticket = Ticket.objects.get()
+    client.post(f"/tickets/{ticket.id}/toggle-status/", follow=True)
+    ticket.refresh_from_db()
+    assert ticket.status == Ticket.Status.CLOSED
+
+    resp = client.post(
+        f"/tickets/{ticket.id}/",
+        data={"message": "Primeiro comentário"},
+        follow=True,
+    )
+
+    assert resp.status_code == 200
+    assert TicketComment.objects.count() == 0
