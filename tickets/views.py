@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator
 
 from .forms import CommentForm, TicketForm
 from .models import Ticket
@@ -54,11 +55,17 @@ def ticket_list(request):
     if status:
         qs = qs.filter(status=status)
 
+    paginator = Paginator(qs, 10)  # 10 por página
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+
     return render(
         request,
         "tickets/list.html",
         {
-            "tickets": qs,
+            "tickets": page_obj,  # pode continuar usando "tickets" no template
+            "page_obj": page_obj,
             "q": q,
             "status": status,
             "category": category,
@@ -67,6 +74,7 @@ def ticket_list(request):
             "priority_choices": Ticket._meta.get_field("priority").choices,
         },
     )
+
 
 
 @login_required
@@ -124,3 +132,4 @@ def toggle_ticket_status(request, ticket_id: int):
 
     ticket.save(update_fields=["status"])
     return redirect("ticket_detail", ticket_id=ticket.id)
+
