@@ -58,6 +58,7 @@ def test_logged_user_can_comment_on_own_ticket(client):
     assert comment.author == user
     assert comment.message == "Primeiro comentário"
 
+
 def test_ticket_list_filters_by_query_and_status(client):
     user = create_user()
     client.login(username="erik", password="12345678")
@@ -85,18 +86,19 @@ def test_ticket_list_filters_by_query_and_status(client):
     assert "Erro no login" in content
     assert "Outra coisa" not in content
 
+
 def test_user_can_close_and_reopen_own_ticket(client):
     user = create_user()
     client.login(username="erik", password="12345678")
 
     ticket = Ticket.objects.create(
-    title="Fechar ticket",
-    description="Teste",
-    category=Ticket.Category.BUG,
-    priority=Ticket.Priority.MEDIUM,
-    status=Ticket.Status.OPEN,
-    requester=user,
-)
+        title="Fechar ticket",
+        description="Teste",
+        category=Ticket.Category.BUG,
+        priority=Ticket.Priority.MEDIUM,
+        status=Ticket.Status.OPEN,
+        requester=user,
+    )
 
     # close
     client.post(f"/tickets/{ticket.id}/toggle-status/", follow=True)
@@ -109,8 +111,9 @@ def test_user_can_close_and_reopen_own_ticket(client):
 
 
 def test_logged_user_cant_comment_in_closed_ticket(client):
-    user = create_user()
+    create_user()
     client.login(username="erik", password="12345678")
+
 
     client.post(
         "/tickets/new/",

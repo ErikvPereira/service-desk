@@ -1,8 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from .forms import CommentForm, TicketForm
@@ -45,7 +45,6 @@ def ticket_list(request):
     if priority:
         qs = qs.filter(priority=priority)
 
-
     if category:
         qs = qs.filter(category=category)
 
@@ -63,11 +62,12 @@ def ticket_list(request):
             "q": q,
             "status": status,
             "category": category,
-            'priority': priority,
+            "priority": priority,
             "category_choices": Ticket._meta.get_field("category").choices,
             "priority_choices": Ticket._meta.get_field("priority").choices,
         },
     )
+
 
 @login_required
 def ticket_new(request):
@@ -108,6 +108,7 @@ def ticket_detail(request, ticket_id: int):
         "tickets/detail.html",
         {"ticket": ticket, "comments": comments, "form": form},
     )
+
 
 @login_required
 @require_POST

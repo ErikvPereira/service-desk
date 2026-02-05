@@ -25,28 +25,18 @@ class Ticket(models.Model):
 
     title = models.CharField(max_length=120)
     description = models.TextField()
-    category = models.CharField(
-        max_length=20, 
-        choices=Category.choices,
-        default=Category.OTHER)
-    priority = models.CharField(
-        max_length=20, 
-        choices=Priority.choices, 
-        default=Priority.MEDIUM)
-    status = models.CharField(
-        max_length=20, 
-        choices=Status.choices, 
-        default=Status.OPEN)
+    category = models.CharField(max_length=20, choices=Category.choices, default=Category.OTHER)
+    priority = models.CharField(max_length=20, choices=Priority.choices, default=Priority.MEDIUM)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.OPEN)
 
     requester = models.ForeignKey(
-        settings.AUTH_USER_MODEL, 
-        on_delete=models.CASCADE, 
-        related_name="tickets"
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tickets"
     )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"#{self.id} {self.title}"
+
 
 class TicketComment(models.Model):
     ticket = models.ForeignKey("Ticket", on_delete=models.CASCADE, related_name="comments")
