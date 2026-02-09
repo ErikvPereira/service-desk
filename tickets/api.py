@@ -1,5 +1,7 @@
-from rest_framework import serializers, viewsets
+from rest_framework import serializers, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from .models import Ticket
 
@@ -28,3 +30,20 @@ class TicketViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(requester=self.request.user)
+
+    @action(detail=True, methods=["post"], url_path="toggle-status")
+    def toggle_status(self, request, pk=None):
+        ticket = self.get_object()
+
+        if ticket.status == Ticket.Status.CLOSED:
+            ticket.status == Ticket.Status.OPEN
+        else:
+            ticket.status = Ticket.status.CLOSED
+            ticket.save(update_fields=[status])
+            return Response(
+                {"id": ticket.id, "status": ticket.status},
+                status=status.HTTP_200_OK,
+            )
+
+    def destroy(self, request, *args, **kwargs):
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
