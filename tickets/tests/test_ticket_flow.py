@@ -114,7 +114,6 @@ def test_logged_user_cant_comment_in_closed_ticket(client):
     create_user()
     client.login(username="erik", password="12345678")
 
-
     client.post(
         "/tickets/new/",
         data={
